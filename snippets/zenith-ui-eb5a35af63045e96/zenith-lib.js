@@ -85,7 +85,7 @@ export function download_file(base64, name) {
         while (n--) {
             u8arr[n] = bstr.charCodeAt(n);
         }
-        return new Blob([u8arr], {type: mime});
+        return new Blob([u8arr], { type: mime });
     }
 
     const downloadFile = (url) => {
@@ -133,4 +133,78 @@ export function hex_2_rgba(hex) {
         c = '0x' + c.join('');
         return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',1)';
     }
+}
+
+export function prismjs_rainbow_braces() {
+    document.querySelectorAll("pre[class*='language-'],code[class*='language-']").forEach(element => {
+        if (!element.classList.contains("match-braces")) {
+            element.classList.add("match-braces");
+        }
+
+        if (!element.classList.contains("rainbow-braces")) {
+            element.classList.add("rainbow-braces");
+        }
+    });
+}
+
+export function prismjs_white_sapce() {
+    document.querySelectorAll("pre[class*='language-'],code[class*='language-']").forEach(element => {
+        element.setAttribute("data-remove-initial-line-feed", true);
+        element.setAttribute("data-remove-trailing", true);
+        element.setAttribute("data-remove-indent", true);
+        element.setAttribute("data-left-trim", true);
+        element.setAttribute("data-right-trim", true);
+    });
+}
+
+export function highlight(el) {
+    try {
+        Prism.highlightElement(el);
+    } catch (_) { }
+}
+
+export function highlight_all() {
+    try {
+        document.querySelectorAll("pre code").forEach(element => {
+            highlight(element);
+        });
+    } catch (_) { }
+}
+
+export function get_catalog(html) {
+    let h = ["h1", "h2", "h3", "h4", "h5", "h6"];
+
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(html, 'text/html');
+
+    let fragment = new DocumentFragment();
+    fragment.append(doc.body);
+
+    let elements = fragment.querySelectorAll("h1, h2, h3, h4, h5, h6");
+    let hElements = [];
+    for (const key of elements) {
+        if (h.indexOf(key.localName) > -1) {
+            let text;
+            if (key.children && key.children.length) {
+                text = get_text(key.children);
+            } else {
+                text = key.innerHTML;
+            }
+            hElements.push(`${parseInt(key.localName[1])},${text}`);
+        }
+    }
+    return hElements;
+}
+
+export function get_text(arr) {
+    let result = null;
+    if (!arr.length) return;
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].children && arr[i].children.length) {
+            result = get_text(arr[i].children)
+        } else {
+            result = arr[i].innerHTML;
+        }
+    }
+    return result;
 }
