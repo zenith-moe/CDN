@@ -208,3 +208,7 @@ export function get_text(arr) {
     }
     return result;
 }
+
+export function auto_grow(el) {
+    autosize(el);
+}
