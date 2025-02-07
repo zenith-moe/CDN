@@ -196,7 +196,7 @@ input[type="password"]::-ms-reveal {
 /*}*/
 
 .cta-bg {
-    background-image: url('../../assets/cta_bg.webp');
+    background-image: url('../assets/cta_bg.webp');
     background-position-y: 10px;
     background-color: transparent;
     position: absolute;
